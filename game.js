@@ -12,7 +12,91 @@ let friction = 0.015;
 let keys = {};
 
 let startTime;
-let timerRunning = true;
+let timerRunning = false;
+
+let currentTrack = 0;
+let trackObjects = [];
+
+const tracks = [
+    {
+        name: "SPEED RUSH",
+        length: 500,
+        width: 12,
+        turns: [
+            { z: 0, x: 0 },
+            { z: -70, x: 0 },
+            { z: -140, x: 5 },
+            { z: -210, x: 5 },
+            { z: -280, x: -5 },
+            { z: -350, x: -5 },
+            { z: -420, x: 0 }
+        ]
+    },
+
+    {
+        name: "TECH CIRCUIT",
+        length: 500,
+        width: 10,
+        turns: [
+            { z: 0, x: 0 },
+            { z: -50, x: 5 },
+            { z: -100, x: -5 },
+            { z: -150, x: -5 },
+            { z: -200, x: 5 },
+            { z: -250, x: 5 },
+            { z: -300, x: -5 },
+            { z: -370, x: 0 },
+            { z: -440, x: 0 }
+        ]
+    },
+
+    {
+        name: "AIRBORNE",
+        length: 500,
+        width: 12,
+        turns: [
+            { z: 0, x: 0 },
+            { z: -100, x: 0 },
+            { z: -170, x: 4 },
+            { z: -240, x: -4 },
+            { z: -320, x: -4 },
+            { z: -400, x: 4 },
+            { z: -470, x: 0 }
+        ]
+    },
+
+    {
+        name: "LOOP RUNNER",
+        length: 550,
+        width: 12,
+        turns: [
+            { z: 0, x: 0 },
+            { z: -100, x: 0 },
+            { z: -180, x: 5 },
+            { z: -250, x: 5 },
+            { z: -330, x: -5 },
+            { z: -410, x: -5 },
+            { z: -500, x: 0 }
+        ]
+    },
+
+    {
+        name: "FINAL CHALLENGE",
+        length: 600,
+        width: 10,
+        turns: [
+            { z: 0, x: 0 },
+            { z: -60, x: 5 },
+            { z: -120, x: -5 },
+            { z: -190, x: -5 },
+            { z: -260, x: 5 },
+            { z: -330, x: 5 },
+            { z: -400, x: -5 },
+            { z: -470, x: 5 },
+            { z: -540, x: 0 }
+        ]
+    }
+];
 
 
 // START
@@ -26,7 +110,6 @@ function init() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x87ceeb);
 
-    // CAMERA
     camera = new THREE.PerspectiveCamera(
         75,
         window.innerWidth / window.innerHeight,
@@ -37,7 +120,6 @@ function init() {
     camera.position.set(0, 5, 10);
 
 
-    // GRAPHICS
     renderer = new THREE.WebGLRenderer({
         antialias: true
     });
@@ -57,79 +139,13 @@ function init() {
     );
 
     sunlight.position.set(10, 20, 10);
+
     scene.add(sunlight);
 
     const ambientLight =
         new THREE.AmbientLight(0xffffff, 0.6);
 
     scene.add(ambientLight);
-
-
-    // GROUND
-    const groundGeometry =
-        new THREE.PlaneGeometry(200, 200);
-
-    const groundMaterial =
-        new THREE.MeshStandardMaterial({
-            color: 0x3b8c3b
-        });
-
-    const ground =
-        new THREE.Mesh(
-            groundGeometry,
-            groundMaterial
-        );
-
-    ground.rotation.x = -Math.PI / 2;
-
-    scene.add(ground);
-
-
-    // ROAD
-    const roadGeometry =
-        new THREE.BoxGeometry(12, 0.2, 200);
-
-    const roadMaterial =
-        new THREE.MeshStandardMaterial({
-            color: 0x333333
-        });
-
-    const road =
-        new THREE.Mesh(
-            roadGeometry,
-            roadMaterial
-        );
-
-    road.position.y = 0.1;
-
-    scene.add(road);
-
-
-    // ROAD CENTER LINES
-    for (let z = -95; z < 100; z += 10) {
-
-        const lineGeometry =
-            new THREE.BoxGeometry(
-                0.3,
-                0.05,
-                4
-            );
-
-        const lineMaterial =
-            new THREE.MeshStandardMaterial({
-                color: 0xffffff
-            });
-
-        const line =
-            new THREE.Mesh(
-                lineGeometry,
-                lineMaterial
-            );
-
-        line.position.set(0, 0.22, z);
-
-        scene.add(line);
-    }
 
 
     // CAR
@@ -147,7 +163,7 @@ function init() {
             carMaterial
         );
 
-    car.position.set(0, 0.7, 70);
+    car.position.set(0, 0.7, 10);
 
     scene.add(car);
 
@@ -172,17 +188,31 @@ function init() {
     car.add(roof);
 
 
-    // TIMER
-    startTime = performance.now();
+    createTrack(currentTrack);
 
 
     // KEYBOARD
     window.addEventListener("keydown", function(event) {
+
         keys[event.key.toLowerCase()] = true;
+
+        if (event.key >= "1" && event.key <= "5") {
+
+            selectTrack(
+                Number(event.key) - 1
+            );
+        }
+
+        if (event.key.toLowerCase() === "r") {
+            restartGame();
+        }
     });
 
+
     window.addEventListener("keyup", function(event) {
+
         keys[event.key.toLowerCase()] = false;
+
     });
 
 
@@ -199,15 +229,256 @@ function init() {
             window.innerWidth,
             window.innerHeight
         );
+
     });
+
+
+    createTrackMenu();
+
+    selectTrack(0);
+}
+
+
+// CREATE TRACK
+function createTrack(trackNumber) {
+
+    removeTrack();
+
+    const track =
+        tracks[trackNumber];
+
+
+    // GROUND
+    const groundGeometry =
+        new THREE.PlaneGeometry(
+            300,
+            800
+        );
+
+    const groundMaterial =
+        new THREE.MeshStandardMaterial({
+            color: 0x3b8c3b
+        });
+
+    const ground =
+        new THREE.Mesh(
+            groundGeometry,
+            groundMaterial
+        );
+
+    ground.rotation.x =
+        -Math.PI / 2;
+
+    ground.position.z =
+        -250;
+
+    scene.add(ground);
+
+    trackObjects.push(ground);
+
+
+    // ROAD
+    const roadGeometry =
+        new THREE.BoxGeometry(
+            track.width,
+            0.2,
+            track.length
+        );
+
+    const roadMaterial =
+        new THREE.MeshStandardMaterial({
+            color: 0x333333
+        });
+
+    const road =
+        new THREE.Mesh(
+            roadGeometry,
+            roadMaterial
+        );
+
+    road.position.y = 0.1;
+
+    road.position.z =
+        -track.length / 2 + 10;
+
+    scene.add(road);
+
+    trackObjects.push(road);
+
+
+    // ROAD LINES
+    for (
+        let z = 0;
+        z > -track.length;
+        z -= 10
+    ) {
+
+        const lineGeometry =
+            new THREE.BoxGeometry(
+                0.3,
+                0.05,
+                4
+            );
+
+        const lineMaterial =
+            new THREE.MeshStandardMaterial({
+                color: 0xffffff
+            });
+
+        const line =
+            new THREE.Mesh(
+                lineGeometry,
+                lineMaterial
+            );
+
+        line.position.set(
+            0,
+            0.22,
+            z
+        );
+
+        scene.add(line);
+
+        trackObjects.push(line);
+    }
+
+
+    // CHECKPOINTS
+    track.turns.forEach(
+        function(point, index) {
+
+            if (index === 0) return;
+
+            const checkpointGeometry =
+                new THREE.BoxGeometry(
+                    track.width,
+                    3,
+                    0.5
+                );
+
+            const checkpointMaterial =
+                new THREE.MeshStandardMaterial({
+                    color: 0x00ffff,
+                    transparent: true,
+                    opacity: 0.35
+                });
+
+            const checkpoint =
+                new THREE.Mesh(
+                    checkpointGeometry,
+                    checkpointMaterial
+                );
+
+            checkpoint.position.set(
+                point.x,
+                1.5,
+                point.z
+            );
+
+            scene.add(checkpoint);
+
+            trackObjects.push(checkpoint);
+        }
+    );
+
+
+    // FINISH LINE
+    const finishGeometry =
+        new THREE.BoxGeometry(
+            track.width,
+            0.05,
+            2
+        );
+
+    const finishMaterial =
+        new THREE.MeshStandardMaterial({
+            color: 0xffffff
+        });
+
+    const finish =
+        new THREE.Mesh(
+            finishGeometry,
+            finishMaterial
+        );
+
+    finish.position.set(
+        0,
+        0.23,
+        -track.length
+    );
+
+    scene.add(finish);
+
+    trackObjects.push(finish);
+}
+
+
+// REMOVE TRACK
+function removeTrack() {
+
+    for (
+        let object of trackObjects
+    ) {
+
+        scene.remove(object);
+
+    }
+
+    trackObjects = [];
+}
+
+
+// TRACK SELECTION
+function selectTrack(number) {
+
+    currentTrack = number;
+
+    createTrack(currentTrack);
+
+    car.position.set(
+        0,
+        0.7,
+        10
+    );
+
+    speed = 0;
+
+    timerRunning = false;
+
+    document.getElementById("trackName").innerText =
+        tracks[currentTrack].name;
+
+    document.getElementById("timer").innerText =
+        "Time: 0.00";
+
+    document.getElementById("best").innerText =
+        "Best: " +
+        getBestTime().toFixed(2);
+
+    updateButtons();
+
+    setTimeout(function() {
+
+        startTime =
+            performance.now();
+
+        timerRunning = true;
+
+    }, 1000);
 }
 
 
 // UPDATE GAME
 function update() {
 
+    if (!timerRunning) return;
+
+
     // ACCELERATE
-    if (keys["w"] || keys["arrowup"]) {
+    if (
+        keys["w"] ||
+        keys["arrowup"]
+    ) {
 
         speed += acceleration;
 
@@ -216,8 +487,12 @@ function update() {
         }
     }
 
+
     // BRAKE
-    else if (keys["s"] || keys["arrowdown"]) {
+    else if (
+        keys["s"] ||
+        keys["arrowdown"]
+    ) {
 
         speed -= acceleration * 2;
 
@@ -225,6 +500,7 @@ function update() {
             speed = 0;
         }
     }
+
 
     // FRICTION
     else {
@@ -240,24 +516,52 @@ function update() {
     // STEERING
     let steering = 0;
 
-    if (keys["a"] || keys["arrowleft"]) {
+
+    if (
+        keys["a"] ||
+        keys["arrowleft"]
+    ) {
+
         steering = 1;
     }
 
-    if (keys["d"] || keys["arrowright"]) {
+
+    if (
+        keys["d"] ||
+        keys["arrowright"]
+    ) {
+
         steering = -1;
     }
 
-    car.position.x += steering * speed * 0.8;
+
+    car.position.x +=
+        steering *
+        speed *
+        0.8;
 
 
     // KEEP CAR ON ROAD
-    if (car.position.x > 5) {
-        car.position.x = 5;
+    const roadWidth =
+        tracks[currentTrack].width / 2 - 1;
+
+    if (
+        car.position.x >
+        roadWidth
+    ) {
+
+        car.position.x =
+            roadWidth;
     }
 
-    if (car.position.x < -5) {
-        car.position.x = -5;
+
+    if (
+        car.position.x <
+        -roadWidth
+    ) {
+
+        car.position.x =
+            -roadWidth;
     }
 
 
@@ -265,10 +569,15 @@ function update() {
     car.position.z -= speed;
 
 
-    // CAMERA FOLLOW
-    camera.position.x = car.position.x;
+    // CAMERA
+    camera.position.x =
+        car.position.x;
+
     camera.position.y = 5;
-    camera.position.z = car.position.z + 10;
+
+    camera.position.z =
+        car.position.z + 10;
+
 
     camera.lookAt(
         car.position.x,
@@ -278,54 +587,260 @@ function update() {
 
 
     // SPEED
-    document.getElementById("speed").innerText =
-        "Speed: " + Math.round(speed * 100);
+    document.getElementById(
+        "speed"
+    ).innerText =
+        "Speed: " +
+        Math.round(speed * 100);
 
 
     // TIMER
-    if (timerRunning) {
+    let time =
+        (performance.now() -
+            startTime) / 1000;
 
-        let time =
-            (performance.now() - startTime) / 1000;
 
-        document.getElementById("timer").innerText =
-            "Time: " + time.toFixed(2);
-    }
+    document.getElementById(
+        "timer"
+    ).innerText =
+        "Time: " +
+        time.toFixed(2);
 
 
     // FINISH
-    if (car.position.z < -90) {
+    if (
+        car.position.z <
+        -tracks[currentTrack].length
+    ) {
 
-        timerRunning = false;
+        finishRace(time);
 
-        alert(
-            "FINISH!\nTime: " +
-            ((performance.now() - startTime) / 1000)
-                .toFixed(2)
-        );
     }
 }
 
 
-// GAME LOOP
-function animate() {
+// FINISH RACE
+function finishRace(time) {
 
-    requestAnimationFrame(animate);
+    timerRunning = false;
 
-    update();
+    let best =
+        getBestTime();
 
-    renderer.render(scene, camera);
+    if (
+        best === 0 ||
+        time < best
+    ) {
+
+        localStorage.setItem(
+            "trackRacerBest_" +
+            currentTrack,
+            time
+        );
+
+        best = time;
+
+        alert(
+            "NEW BEST TIME!\n\n" +
+            tracks[currentTrack].name +
+            "\n" +
+            time.toFixed(2) +
+            " seconds"
+        );
+
+    } else {
+
+        alert(
+            "FINISH!\n\n" +
+            tracks[currentTrack].name +
+            "\n" +
+            time.toFixed(2) +
+            " seconds"
+        );
+    }
+
+
+    document.getElementById(
+        "best"
+    ).innerText =
+        "Best: " +
+        best.toFixed(2);
+}
+
+
+// GET BEST TIME
+function getBestTime() {
+
+    const value =
+        localStorage.getItem(
+            "trackRacerBest_" +
+            currentTrack
+        );
+
+    if (!value) {
+        return 0;
+    }
+
+    return Number(value);
 }
 
 
 // RESTART
 function restartGame() {
 
-    car.position.set(0, 0.7, 70);
+    car.position.set(
+        0,
+        0.7,
+        10
+    );
 
     speed = 0;
 
-    startTime = performance.now();
+    startTime =
+        performance.now();
 
     timerRunning = true;
+
+}
+
+
+// CREATE MENU
+function createTrackMenu() {
+
+    const menu =
+        document.createElement("div");
+
+    menu.id = "trackMenu";
+
+    menu.style.position = "fixed";
+    menu.style.top = "20px";
+    menu.style.right = "20px";
+    menu.style.zIndex = "20";
+    menu.style.color = "white";
+    menu.style.background =
+        "rgba(0,0,0,0.7)";
+    menu.style.padding = "15px";
+    menu.style.borderRadius = "10px";
+    menu.style.fontFamily =
+        "Arial, sans-serif";
+
+
+    const title =
+        document.createElement("div");
+
+    title.innerText =
+        "TRACK SELECT";
+
+    title.style.fontWeight =
+        "bold";
+
+    title.style.marginBottom =
+        "10px";
+
+    menu.appendChild(title);
+
+
+    for (
+        let i = 0;
+        i < tracks.length;
+        i++
+    ) {
+
+        const button =
+            document.createElement("button");
+
+        button.innerText =
+            (i + 1) +
+            ". " +
+            tracks[i].name;
+
+        button.style.display =
+            "block";
+
+        button.style.width =
+            "180px";
+
+        button.style.margin =
+            "5px 0";
+
+        button.onclick =
+            function() {
+
+                selectTrack(i);
+
+            };
+
+        menu.appendChild(button);
+    }
+
+
+    const trackName =
+        document.createElement("div");
+
+    trackName.id =
+        "trackName";
+
+    trackName.style.marginTop =
+        "10px";
+
+    menu.appendChild(trackName);
+
+
+    const best =
+        document.createElement("div");
+
+    best.id = "best";
+
+    best.style.marginTop =
+        "5px";
+
+    menu.appendChild(best);
+
+
+    document.body.appendChild(menu);
+}
+
+
+// UPDATE BUTTONS
+function updateButtons() {
+
+    const buttons =
+        document.querySelectorAll(
+            "#trackMenu button"
+        );
+
+    buttons.forEach(
+        function(button, index) {
+
+            if (
+                index === currentTrack
+            ) {
+
+                button.style.background =
+                    "#00aaff";
+
+            } else {
+
+                button.style.background =
+                    "#ff3b30";
+
+            }
+        }
+    );
+}
+
+
+// GAME LOOP
+function animate() {
+
+    requestAnimationFrame(
+        animate
+    );
+
+    update();
+
+    renderer.render(
+        scene,
+        camera
+    );
 }
