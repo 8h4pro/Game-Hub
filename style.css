@@ -144,3 +144,42 @@ footer {
     padding: 40px 20px;
     color: #666;
 }
+
+#leaderboardContainer {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 280px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    font-family: Arial, sans-serif;
+    z-index: 1000;
+}
+
+#leaderboardContainer h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+#leaderboard {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.leaderboard-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 70px;
+    gap: 5px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.leaderboard-row span:last-child {
+    text-align: right;
+}
