@@ -41,15 +41,19 @@ const tracks = [
         width: 12,
 
         turns: [
-            { z: 0, x: 0 },
-            { z: -70, x: 0 },
-            { z: -140, x: 5 },
-            { z: -210, x: 5 },
-            { z: -280, x: -5 },
-            { z: -350, x: -5 },
-            { z: -420, x: 0 }
+            { z: 10, x: 0 },
+            { z: -60, x: 0 },
+            { z: -110, x: 8 },
+            { z: -160, x: 8 },
+            { z: -210, x: -8 },
+            { z: -260, x: -8 },
+            { z: -320, x: 8 },
+            { z: -380, x: 8 },
+            { z: -440, x: 0 },
+            { z: -490, x: 0 }
         ]
     },
+
 
     {
         name: "TECH CIRCUIT",
@@ -57,17 +61,19 @@ const tracks = [
         width: 10,
 
         turns: [
-            { z: 0, x: 0 },
-            { z: -50, x: 5 },
-            { z: -100, x: -5 },
-            { z: -150, x: -5 },
-            { z: -200, x: 5 },
-            { z: -250, x: 5 },
-            { z: -300, x: -5 },
-            { z: -370, x: 0 },
-            { z: -440, x: 0 }
+            { z: 10, x: 0 },
+            { z: -50, x: 8 },
+            { z: -100, x: -8 },
+            { z: -150, x: -8 },
+            { z: -200, x: 8 },
+            { z: -250, x: 8 },
+            { z: -300, x: -8 },
+            { z: -350, x: -8 },
+            { z: -410, x: 8 },
+            { z: -490, x: 0 }
         ]
     },
+
 
     {
         name: "AIRBORNE",
@@ -75,15 +81,18 @@ const tracks = [
         width: 12,
 
         turns: [
-            { z: 0, x: 0 },
-            { z: -100, x: 0 },
-            { z: -170, x: 4 },
-            { z: -240, x: -4 },
-            { z: -320, x: -4 },
-            { z: -400, x: 4 },
-            { z: -470, x: 0 }
+            { z: 10, x: 0 },
+            { z: -80, x: 0 },
+            { z: -140, x: 9 },
+            { z: -200, x: 9 },
+            { z: -260, x: -9 },
+            { z: -320, x: -9 },
+            { z: -380, x: 9 },
+            { z: -440, x: 9 },
+            { z: -490, x: 0 }
         ]
     },
+
 
     {
         name: "LOOP RUNNER",
@@ -91,15 +100,19 @@ const tracks = [
         width: 12,
 
         turns: [
-            { z: 0, x: 0 },
-            { z: -100, x: 0 },
-            { z: -180, x: 5 },
-            { z: -250, x: 5 },
-            { z: -330, x: -5 },
-            { z: -410, x: -5 },
-            { z: -500, x: 0 }
+            { z: 10, x: 0 },
+            { z: -70, x: 0 },
+            { z: -130, x: 9 },
+            { z: -190, x: 9 },
+            { z: -250, x: -9 },
+            { z: -310, x: -9 },
+            { z: -370, x: 9 },
+            { z: -430, x: 9 },
+            { z: -500, x: -5 },
+            { z: -540, x: 0 }
         ]
     },
+
 
     {
         name: "FINAL CHALLENGE",
@@ -107,15 +120,17 @@ const tracks = [
         width: 10,
 
         turns: [
-            { z: 0, x: 0 },
-            { z: -60, x: 5 },
-            { z: -120, x: -5 },
-            { z: -190, x: -5 },
-            { z: -260, x: 5 },
-            { z: -330, x: 5 },
-            { z: -400, x: -5 },
-            { z: -470, x: 5 },
-            { z: -540, x: 0 }
+            { z: 10, x: 0 },
+            { z: -60, x: 9 },
+            { z: -120, x: -9 },
+            { z: -180, x: -9 },
+            { z: -240, x: 9 },
+            { z: -300, x: 9 },
+            { z: -360, x: -9 },
+            { z: -420, x: -9 },
+            { z: -480, x: 9 },
+            { z: -540, x: 5 },
+            { z: -590, x: 0 }
         ]
     }
 
@@ -127,7 +142,6 @@ const tracks = [
 // ==========================================
 
 init();
-
 animate();
 
 
@@ -189,13 +203,11 @@ function init() {
             2
         );
 
-
     sunlight.position.set(
         10,
         20,
         10
     );
-
 
     scene.add(
         sunlight
@@ -207,7 +219,6 @@ function init() {
             0xffffff,
             0.6
         );
-
 
     scene.add(
         ambientLight
@@ -281,13 +292,6 @@ function init() {
     );
 
 
-    // CREATE FIRST TRACK
-
-    createTrack(
-        currentTrack
-    );
-
-
     // KEYBOARD
 
     window.addEventListener(
@@ -296,7 +300,6 @@ function init() {
 
             const key =
                 event.key.toLowerCase();
-
 
             keys[key] = true;
 
@@ -362,9 +365,7 @@ function init() {
                 window.innerWidth /
                 window.innerHeight;
 
-
             camera.updateProjectionMatrix();
-
 
             renderer.setSize(
                 window.innerWidth,
@@ -383,12 +384,70 @@ function init() {
 
 
 // ==========================================
+// GET TRACK X POSITION
+// ==========================================
+
+function getTrackX(z, track) {
+
+    const points =
+        track.turns;
+
+
+    if (
+        z >= points[0].z
+    ) {
+
+        return points[0].x;
+
+    }
+
+
+    for (
+        let i = 0;
+        i < points.length - 1;
+        i++
+    ) {
+
+        const a =
+            points[i];
+
+        const b =
+            points[i + 1];
+
+
+        if (
+            z <= a.z &&
+            z >= b.z
+        ) {
+
+            const amount =
+                (z - a.z) /
+                (b.z - a.z);
+
+
+            return (
+                a.x +
+                (b.x - a.x) *
+                amount
+            );
+
+        }
+
+    }
+
+
+    return points[
+        points.length - 1
+    ].x;
+
+}
+
+
+// ==========================================
 // CREATE TRACK
 // ==========================================
 
-function createTrack(
-    trackNumber
-) {
+function createTrack(trackNumber) {
 
     removeTrack();
 
@@ -398,12 +457,14 @@ function createTrack(
         tracks[trackNumber];
 
 
+    // ======================================
     // GROUND
+    // ======================================
 
     const groundGeometry =
         new THREE.PlaneGeometry(
             300,
-            800
+            900
         );
 
 
@@ -425,7 +486,7 @@ function createTrack(
 
 
     ground.position.z =
-        -250;
+        -280;
 
 
     scene.add(
@@ -438,54 +499,118 @@ function createTrack(
     );
 
 
-    // ROAD
+    // ======================================
+    // ROAD SEGMENTS
+    // ======================================
 
-    const roadGeometry =
-        new THREE.BoxGeometry(
-            track.width,
-            0.2,
-            track.length
+    for (
+        let i = 0;
+        i < track.turns.length - 1;
+        i++
+    ) {
+
+        const a =
+            track.turns[i];
+
+        const b =
+            track.turns[i + 1];
+
+
+        const dx =
+            b.x - a.x;
+
+        const dz =
+            b.z - a.z;
+
+
+        const length =
+            Math.sqrt(
+                dx * dx +
+                dz * dz
+            );
+
+
+        const angle =
+            Math.atan2(
+                dx,
+                dz
+            );
+
+
+        const roadGeometry =
+            new THREE.BoxGeometry(
+                track.width,
+                0.2,
+                length + 2
+            );
+
+
+        const roadMaterial =
+            new THREE.MeshStandardMaterial({
+                color: 0x333333
+            });
+
+
+        const road =
+            new THREE.Mesh(
+                roadGeometry,
+                roadMaterial
+            );
+
+
+        road.position.set(
+            (a.x + b.x) / 2,
+            0.1,
+            (a.z + b.z) / 2
         );
 
 
-    const roadMaterial =
-        new THREE.MeshStandardMaterial({
-            color: 0x333333
-        });
+        road.rotation.y =
+            angle;
 
 
-    const road =
-        new THREE.Mesh(
-            roadGeometry,
-            roadMaterial
+        scene.add(
+            road
         );
 
 
-    road.position.y =
-        0.1;
+        trackObjects.push(
+            road
+        );
+
+    }
 
 
-    road.position.z =
-        -track.length / 2 + 10;
-
-
-    scene.add(
-        road
-    );
-
-
-    trackObjects.push(
-        road
-    );
-
-
+    // ======================================
     // ROAD CENTER LINES
+    // ======================================
 
     for (
         let z = 0;
         z > -track.length;
         z -= 10
     ) {
+
+        const x =
+            getTrackX(
+                z,
+                track
+            );
+
+
+        const nextX =
+            getTrackX(
+                z - 1,
+                track
+            );
+
+
+        const angle =
+            Math.atan2(
+                nextX - x,
+                -1
+            );
+
 
         const lineGeometry =
             new THREE.BoxGeometry(
@@ -509,10 +634,14 @@ function createTrack(
 
 
         line.position.set(
-            0,
+            x,
             0.22,
             z
         );
+
+
+        line.rotation.y =
+            angle;
 
 
         scene.add(
@@ -527,80 +656,117 @@ function createTrack(
     }
 
 
+    // ======================================
     // CHECKPOINTS
+    // ======================================
 
-    track.turns.forEach(
-        function(
-            point,
-            index
-        ) {
+    for (
+        let i = 1;
+        i < track.turns.length - 1;
+        i++
+    ) {
 
-            if (
-                index === 0
-            ) {
-
-                return;
-
-            }
+        const point =
+            track.turns[i];
 
 
-            const checkpointGeometry =
-                new THREE.BoxGeometry(
-                    track.width,
-                    3,
-                    0.5
-                );
+        const previous =
+            track.turns[i - 1];
+
+        const next =
+            track.turns[i + 1];
 
 
-            const checkpointMaterial =
-                new THREE.MeshStandardMaterial({
-                    color: 0x00ffff,
-                    transparent: true,
-                    opacity: 0.35
-                });
+        const directionX =
+            next.x - previous.x;
+
+        const directionZ =
+            next.z - previous.z;
 
 
-            const checkpoint =
-                new THREE.Mesh(
-                    checkpointGeometry,
-                    checkpointMaterial
-                );
-
-
-            checkpoint.position.set(
-                point.x,
-                1.5,
-                point.z
+        const angle =
+            Math.atan2(
+                directionX,
+                directionZ
             );
 
 
-            scene.add(
-                checkpoint
+        const checkpointGeometry =
+            new THREE.BoxGeometry(
+                track.width,
+                3,
+                0.5
             );
 
 
-            trackObjects.push(
-                checkpoint
-            );
+        const checkpointMaterial =
+            new THREE.MeshStandardMaterial({
 
+                color: 0x00ffff,
 
-            checkpoints.push({
+                transparent: true,
 
-                mesh: checkpoint,
-
-                x: point.x,
-
-                z: point.z,
-
-                passed: false
+                opacity: 0.35
 
             });
 
-        }
-    );
+
+        const checkpoint =
+            new THREE.Mesh(
+                checkpointGeometry,
+                checkpointMaterial
+            );
 
 
+        checkpoint.position.set(
+
+            point.x,
+
+            1.5,
+
+            point.z
+
+        );
+
+
+        checkpoint.rotation.y =
+            angle;
+
+
+        scene.add(
+            checkpoint
+        );
+
+
+        trackObjects.push(
+            checkpoint
+        );
+
+
+        checkpoints.push({
+
+            mesh: checkpoint,
+
+            x: point.x,
+
+            z: point.z,
+
+            passed: false
+
+        });
+
+    }
+
+
+    // ======================================
     // FINISH LINE
+    // ======================================
+
+    const finishPoint =
+        track.turns[
+            track.turns.length - 1
+        ];
+
 
     const finishGeometry =
         new THREE.BoxGeometry(
@@ -624,10 +790,38 @@ function createTrack(
 
 
     finish.position.set(
-        0,
+
+        finishPoint.x,
+
         0.23,
-        -track.length
+
+        finishPoint.z
+
     );
+
+
+    const finishDirection =
+        track.turns[
+            track.turns.length - 1
+        ];
+
+
+    const previousPoint =
+        track.turns[
+            track.turns.length - 2
+        ];
+
+
+    finish.rotation.y =
+        Math.atan2(
+
+            finishDirection.x -
+            previousPoint.x,
+
+            finishDirection.z -
+            previousPoint.z
+
+        );
 
 
     scene.add(
@@ -668,9 +862,7 @@ function removeTrack() {
 // SELECT TRACK
 // ==========================================
 
-function selectTrack(
-    number
-) {
+function selectTrack(number) {
 
     currentTrack =
         number;
@@ -746,7 +938,7 @@ function update() {
 
 
     // ======================================
-    // BRAKING
+    // BRAKE
     // ======================================
 
     else if (
@@ -797,23 +989,9 @@ function update() {
     let steering = 0;
 
 
-    // LEFT = LEFT
-
     if (
         keys["a"] ||
         keys["arrowleft"]
-    ) {
-
-        steering = 1;
-
-    }
-
-
-    // RIGHT = RIGHT
-
-    if (
-        keys["d"] ||
-        keys["arrowright"]
     ) {
 
         steering = -1;
@@ -821,45 +999,59 @@ function update() {
     }
 
 
-    // IMPORTANT:
-    // SUBTRACTING HERE MAKES
-    // A / LEFT MOVE THE CAR LEFT
-    // AND D / RIGHT MOVE THE CAR RIGHT.
+    if (
+        keys["d"] ||
+        keys["arrowright"]
+    ) {
 
-    car.position.x -=
+        steering = 1;
+
+    }
+
+
+    car.position.x +=
         steering *
         speed *
         0.8;
 
 
     // ======================================
-    // KEEP CAR ON ROAD
+    // KEEP CAR NEAR TRACK
     // ======================================
 
-    const roadWidth =
-        tracks[
-            currentTrack
-        ].width / 2 - 1;
+    const track =
+        tracks[currentTrack];
+
+
+    const roadCenter =
+        getTrackX(
+            car.position.z,
+            track
+        );
+
+
+    const roadLimit =
+        track.width / 2 - 1;
 
 
     if (
         car.position.x >
-        roadWidth
+        roadCenter + roadLimit
     ) {
 
         car.position.x =
-            roadWidth;
+            roadCenter + roadLimit;
 
     }
 
 
     if (
         car.position.x <
-        -roadWidth
+        roadCenter - roadLimit
     ) {
 
         car.position.x =
-            -roadWidth;
+            roadCenter - roadLimit;
 
     }
 
@@ -873,7 +1065,7 @@ function update() {
 
 
     // ======================================
-    // CHECK CHECKPOINTS
+    // CHECKPOINTS
     // ======================================
 
     checkCheckpoints();
@@ -896,9 +1088,13 @@ function update() {
 
 
     camera.lookAt(
+
         car.position.x,
+
         car.position.y,
+
         car.position.z - 10
+
     );
 
 
@@ -939,9 +1135,7 @@ function update() {
 
     if (
         car.position.z <
-        -tracks[
-            currentTrack
-        ].length
+        -track.length
     ) {
 
         finishRace(
@@ -980,8 +1174,10 @@ function checkCheckpoints() {
 
         const distance =
             Math.abs(
+
                 car.position.z -
                 checkpoint.z
+
             );
 
 
@@ -1027,7 +1223,7 @@ function checkCheckpoints() {
 
 
 // ==========================================
-// R = RESPAWN CHECKPOINT
+// R = CHECKPOINT
 // ==========================================
 
 function respawnCheckpoint() {
@@ -1058,18 +1254,22 @@ function respawnCheckpoint() {
 
 
 // ==========================================
-// T = RESTART RUN
+// T = RESTART
 // ==========================================
 
 function restartRun() {
 
+    const track =
+        tracks[currentTrack];
+
+
     car.position.set(
 
-        0,
+        track.turns[0].x,
 
         0.7,
 
-        10
+        track.turns[0].z
 
     );
 
@@ -1083,11 +1283,11 @@ function restartRun() {
 
     lastCheckpoint = {
 
-        x: 0,
+        x: track.turns[0].x,
 
         y: 0.7,
 
-        z: 10
+        z: track.turns[0].z
 
     };
 
@@ -1138,9 +1338,7 @@ function restartRun() {
 // FINISH RACE
 // ==========================================
 
-function finishRace(
-    time
-) {
+function finishRace(time) {
 
     timerRunning =
         false;
@@ -1150,8 +1348,6 @@ function finishRace(
         getBestTime();
 
 
-    // NEW BEST
-
     if (
         best === 0 ||
         time < best
@@ -1160,7 +1356,6 @@ function finishRace(
         localStorage.setItem(
 
             "trackRacerBest_" +
-
             currentTrack,
 
             time
@@ -1185,9 +1380,6 @@ function finishRace(
         );
 
     }
-
-
-    // NORMAL FINISH
 
     else {
 
@@ -1219,7 +1411,7 @@ function finishRace(
         getBestTime().toFixed(2);
 
 
-    // GIVE COINS
+    // COINS
 
     giveTrackRacerCoins(
         time
@@ -1235,11 +1427,9 @@ function finishRace(
 function getBestTime() {
 
     const value =
-
         localStorage.getItem(
 
             "trackRacerBest_" +
-
             currentTrack
 
         );
@@ -1270,7 +1460,6 @@ const trackCoinTiers = [
     // SPEED RUSH
 
     [
-
         {
             time: 35,
             coins: 10
@@ -1285,14 +1474,12 @@ const trackCoinTiers = [
             time: 23,
             coins: 40
         }
-
     ],
 
 
     // TECH CIRCUIT
 
     [
-
         {
             time: 38,
             coins: 10
@@ -1307,14 +1494,12 @@ const trackCoinTiers = [
             time: 25,
             coins: 45
         }
-
     ],
 
 
     // AIRBORNE
 
     [
-
         {
             time: 40,
             coins: 10
@@ -1329,14 +1514,12 @@ const trackCoinTiers = [
             time: 26,
             coins: 50
         }
-
     ],
 
 
     // LOOP RUNNER
 
     [
-
         {
             time: 43,
             coins: 15
@@ -1351,14 +1534,12 @@ const trackCoinTiers = [
             time: 28,
             coins: 55
         }
-
     ],
 
 
     // FINAL CHALLENGE
 
     [
-
         {
             time: 48,
             coins: 15
@@ -1373,19 +1554,16 @@ const trackCoinTiers = [
             time: 31,
             coins: 60
         }
-
     ]
 
 ];
 
 
 // ==========================================
-// GIVE TRACK RACER COINS
+// GIVE COINS
 // ==========================================
 
-function giveTrackRacerCoins(
-    time
-) {
+function giveTrackRacerCoins(time) {
 
     const tiers =
         trackCoinTiers[
@@ -1395,8 +1573,6 @@ function giveTrackRacerCoins(
 
     let reward = 0;
 
-
-    // CHECK BEST TIER FIRST
 
     for (
         let i = tiers.length - 1;
@@ -1461,7 +1637,7 @@ function giveTrackRacerCoins(
 
 
 // ==========================================
-// CREATE TRACK MENU
+// TRACK MENU
 // ==========================================
 
 function createTrackMenu() {
@@ -1588,7 +1764,7 @@ function createTrackMenu() {
 
 
 // ==========================================
-// UPDATE TRACK BUTTONS
+// UPDATE BUTTONS
 // ==========================================
 
 function updateButtons() {
