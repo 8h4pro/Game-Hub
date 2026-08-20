@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -16,9 +15,7 @@
         rel="stylesheet"
         href="style.css"
     >
-
 </head>
-
 
 <body>
 
@@ -26,7 +23,7 @@
 
         <h1>GAME HUB</h1>
 
-        <p>Your ultimate gaming practice hub</p>
+        <p>Your ultimate gaming hub</p>
 
         <button onclick="showAccount()">
             ACCOUNT
@@ -39,9 +36,7 @@
 
         <h2>GAMES</h2>
 
-
         <div class="games">
-
 
             <!-- TRACK RACER -->
 
@@ -51,11 +46,12 @@
                     🏎️
                 </div>
 
-                <h3>Track Racer</h3>
+                <h3>
+                    Track Racer
+                </h3>
 
                 <p>
-                    Race through challenging
-                    tracks and beat your best time.
+                    Race around the track and beat your best time.
                 </p>
 
                 <button
@@ -67,68 +63,27 @@
             </div>
 
 
-            <!-- AIM TRAINER -->
+            <!-- FUTURE GAMES -->
 
-            <div class="game-card locked">
+            <div class="game-card">
 
                 <div class="game-icon">
-                    🎯
+                    🎮
                 </div>
 
-                <h3>Aim Trainer</h3>
+                <h3>
+                    Coming Soon
+                </h3>
 
                 <p>
-                    Improve your aim and accuracy.
+                    More games are coming to Game Hub.
                 </p>
 
                 <button disabled>
-                    COMING SOON
+                    SOON
                 </button>
 
             </div>
-
-
-            <!-- REACTION TEST -->
-
-            <div class="game-card locked">
-
-                <div class="game-icon">
-                    ⚡
-                </div>
-
-                <h3>Reaction Test</h3>
-
-                <p>
-                    Test how fast you can react.
-                </p>
-
-                <button disabled>
-                    COMING SOON
-                </button>
-
-            </div>
-
-
-            <!-- CPS TEST -->
-
-            <div class="game-card locked">
-
-                <div class="game-icon">
-                    🖱️
-                </div>
-
-                <h3>CPS Test</h3>
-
-                <p>
-                    Test your clicks per second.
-                </p>
-
-                <button disabled>
-                    COMING SOON
-                </button>
-
-            </div>
-
 
         </div>
 
@@ -137,38 +92,49 @@
 
     <!-- ACCOUNT WINDOW -->
 
-    <div
-        id="accountWindow"
-        class="account-window"
-    >
+    <div id="accountWindow">
 
         <div class="account-box">
 
-            <button
-                class="close"
-                onclick="closeAccount()"
-            >
-                ×
-            </button>
-
-            <h2>ACCOUNT</h2>
+            <h2>
+                YOUR ACCOUNT
+            </h2>
 
             <input
-                id="username"
                 type="text"
-                placeholder="Username"
+                id="username"
+                placeholder="Enter your username"
                 maxlength="20"
             >
+
+            <p id="accountMessage">
+                Enter a username to create your account.
+            </p>
 
             <button onclick="login()">
                 SAVE ACCOUNT
             </button>
 
-            <p id="accountMessage"></p>
+            <button onclick="logout()">
+                LOG OUT
+            </button>
+
+            <button onclick="closeAccount()">
+                CLOSE
+            </button>
 
         </div>
 
     </div>
+
+
+    <footer>
+
+        <p>
+            Game Hub © 2026
+        </p>
+
+    </footer>
 
 
     <script src="account.js"></script>
