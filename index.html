@@ -1,144 +1,129 @@
-<!DOCTYPE html>
-<html lang="en">
+// ==========================================
+// GAME HUB ACCOUNT + LEADERBOARD
+// ==========================================
 
-<head>
-    <meta charset="UTF-8">
+function getGameHubUsername() {
+    return localStorage.getItem("gameHubUsername") || "Guest";
+}
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+function getLeaderboard() {
+    const data = localStorage.getItem("trackRacerLeaderboard");
 
-    <title>Game Hub</title>
+    if (!data) {
+        return [];
+    }
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-</head>
+    try {
+        return JSON.parse(data);
+    } catch {
+        return [];
+    }
+}
 
-<body>
+function saveLeaderboard(data) {
+    localStorage.setItem(
+        "trackRacerLeaderboard",
+        JSON.stringify(data)
+    );
+}
 
-    <header>
+function saveTrackRacerScore(time) {
 
-        <h1>GAME HUB</h1>
+    const username = getGameHubUsername();
 
-        <p>Your ultimate gaming hub</p>
+    if (username === "Guest") {
+        alert(
+            "Please create an account on Game Hub before saving your score!"
+        );
 
-        <button onclick="showAccount()">
-            ACCOUNT
-        </button>
+        return;
+    }
 
-    </header>
+    let leaderboard = getLeaderboard();
 
+    const existingPlayer = leaderboard.find(
+        player => player.username === username
+    );
 
-    <main>
+    if (existingPlayer) {
 
-        <h2>GAMES</h2>
+        // Only replace the score if this is a better time
+        if (time < existingPlayer.time) {
+            existingPlayer.time = time;
+        }
 
-        <div class="games">
+    } else {
 
-            <!-- TRACK RACER -->
+        leaderboard.push({
+            username: username,
+            time: time
+        });
 
-            <div class="game-card">
+    }
 
-                <div class="game-icon">
-                    🏎️
-                </div>
+    // Fastest times first
+    leaderboard.sort(
+        (a, b) => a.time - b.time
+    );
 
-                <h3>
-                    Track Racer
-                </h3>
+    // Keep top 10
+    leaderboard = leaderboard.slice(0, 10);
 
-                <p>
-                    Race around the track and beat your best time.
-                </p>
+    saveLeaderboard(leaderboard);
 
-                <button
-                    onclick="window.location.href='games/track-racer/index.html'"
-                >
-                    PLAY
-                </button>
+    displayLeaderboard();
+}
 
-            </div>
+function displayLeaderboard() {
 
+    const leaderboard = getLeaderboard();
 
-            <!-- FUTURE GAMES -->
+    const leaderboardElement =
+        document.getElementById("leaderboard");
 
-            <div class="game-card">
+    if (!leaderboardElement) {
+        return;
+    }
 
-                <div class="game-icon">
-                    🎮
-                </div>
+    leaderboardElement.innerHTML = "";
 
-                <h3>
-                    Coming Soon
-                </h3>
+    if (leaderboard.length === 0) {
 
-                <p>
-                    More games are coming to Game Hub.
-                </p>
+        leaderboardElement.innerHTML =
+            "<p>No scores yet!</p>";
 
-                <button disabled>
-                    SOON
-                </button>
+        return;
+    }
 
-            </div>
+    leaderboard.forEach((player, index) => {
 
-        </div>
+        const row = document.createElement("div");
 
-    </main>
+        row.className = "leaderboard-row";
 
+        row.innerHTML = `
+            <span>#${index + 1}</span>
+            <span>${escapeHTML(player.username)}</span>
+            <span>${player.time.toFixed(2)}s</span>
+        `;
 
-    <!-- ACCOUNT WINDOW -->
+        leaderboardElement.appendChild(row);
 
-    <div id="accountWindow">
+    });
+}
 
-        <div class="account-box">
+function escapeHTML(text) {
 
-            <h2>
-                YOUR ACCOUNT
-            </h2>
+    const div = document.createElement("div");
 
-            <input
-                type="text"
-                id="username"
-                placeholder="Enter your username"
-                maxlength="20"
-            >
+    div.textContent = text;
 
-            <p id="accountMessage">
-                Enter a username to create your account.
-            </p>
-
-            <button onclick="login()">
-                SAVE ACCOUNT
-            </button>
-
-            <button onclick="logout()">
-                LOG OUT
-            </button>
-
-            <button onclick="closeAccount()">
-                CLOSE
-            </button>
-
-        </div>
-
-    </div>
+    return div.innerHTML;
+}
 
 
-    <footer>
-
-        <p>
-            Game Hub © 2026
-        </p>
-
-    </footer>
-
-
-    <script src="account.js"></script>
-
-</body>
-
-</html>
+// Display leaderboard when game loads
+window.addEventListener(
+    "load",
+    displayLeaderboard
+);
