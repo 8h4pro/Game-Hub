@@ -1,100 +1,148 @@
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
 body {
+    margin: 0;
     overflow: hidden;
-    background: #111;
     font-family: Arial, sans-serif;
-}
-
-canvas {
-    display: block;
 }
 
 #ui {
     position: fixed;
     top: 20px;
     left: 20px;
-    z-index: 10;
+    z-index: 20;
+
     color: white;
+
+    background:
+        rgba(0, 0, 0, 0.7);
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    min-width: 220px;
 }
 
 #ui h1 {
-    font-size: 32px;
+    margin: 0 0 10px 0;
+    font-size: 24px;
+}
+
+#trackName {
+    font-weight: bold;
     margin-bottom: 10px;
-    letter-spacing: 3px;
 }
 
 #timer,
-#speed {
-    font-size: 20px;
-    margin-bottom: 5px;
+#speed,
+#best,
+#coins {
+    margin: 6px 0;
 }
 
 button {
-    margin-top: 10px;
-    padding: 10px 20px;
+    display: block;
+
+    width: 100%;
+
+    margin-top: 8px;
+
+    padding: 10px;
+
     border: none;
+
     border-radius: 6px;
+
     background: #ff3b30;
+
     color: white;
+
     font-weight: bold;
+
     cursor: pointer;
 }
 
 button:hover {
-    background: #ff6258;
+    background: #ff5a50;
 }
 
-#controls {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 10;
-    color: white;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 12px;
-    border-radius: 8px;
-}
 #leaderboardContainer {
     position: fixed;
+
     top: 20px;
+
     right: 20px;
+
     width: 280px;
-    background: rgba(0, 0, 0, 0.8);
+
+    background:
+        rgba(0, 0, 0, 0.8);
+
     color: white;
+
     padding: 20px;
+
     border-radius: 15px;
+
     font-family: Arial, sans-serif;
+
     z-index: 1000;
 }
 
 #leaderboardContainer h2 {
     text-align: center;
+
+    margin-top: 0;
+
     margin-bottom: 15px;
+
     font-size: 20px;
 }
 
 #leaderboard {
     display: flex;
+
     flex-direction: column;
+
     gap: 8px;
 }
 
 .leaderboard-row {
     display: grid;
+
     grid-template-columns:
         40px 1fr 70px;
+
     gap: 5px;
+
     padding: 8px;
-    background: rgba(255, 255, 255, 0.1);
+
+    background:
+        rgba(255, 255, 255, 0.1);
+
     border-radius: 6px;
+
     font-size: 14px;
 }
 
 .leaderboard-row span:last-child {
     text-align: right;
+}
+
+@media (max-width: 700px) {
+
+    #leaderboardContainer {
+        width: 220px;
+        right: 10px;
+        top: 10px;
+    }
+
+    #ui {
+        left: 10px;
+        top: 10px;
+    }
+
 }
