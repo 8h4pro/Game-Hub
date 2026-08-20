@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Track Racer - Game Hub</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+</head>
+
+<body>
+
+    <div id="ui">
+
+        <h1>TRACK RACER</h1>
+
+        <div id="trackName">SPEED RUSH</div>
+
+        <div id="timer">Time: 0.00</div>
+
+        <div id="speed">Speed: 0</div>
+
+        <div id="best">Best: 0.00</div>
+
+        <button onclick="restartRun()">RESTART RUN</button>
+
+        <button onclick="window.location.href='../../index.html'">
+            GAME HUB
+        </button>
+
+    </div>
+
+
+    <div id="controls">
+
+        <p>W / ↑ = Accelerate</p>
+        <p>S / ↓ = Brake</p>
+        <p>A / ← = Left</p>
+        <p>D / → = Right</p>
+
+        <p>R = Last Checkpoint</p>
+        <p>T = Restart Run</p>
+
+        <p>1-5 = Select Track</p>
+
+    </div>
+
+
+    <script src="game.js"></script>
+
+</body>
+</html>
