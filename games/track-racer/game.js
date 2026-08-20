@@ -143,6 +143,8 @@ function init() {
         new THREE.Color(0x87ceeb);
 
 
+    // CAMERA
+
     camera =
         new THREE.PerspectiveCamera(
             75,
@@ -160,6 +162,8 @@ function init() {
     );
 
 
+    // GRAPHICS
+
     renderer =
         new THREE.WebGLRenderer({
             antialias: true
@@ -176,6 +180,8 @@ function init() {
         renderer.domElement
     );
 
+
+    // LIGHT
 
     const sunlight =
         new THREE.DirectionalLight(
@@ -275,6 +281,8 @@ function init() {
     );
 
 
+    // CREATE FIRST TRACK
+
     createTrack(
         currentTrack
     );
@@ -293,6 +301,8 @@ function init() {
             keys[key] = true;
 
 
+            // TRACK SELECT
+
             if (
                 event.key >= "1" &&
                 event.key <= "5"
@@ -305,6 +315,8 @@ function init() {
             }
 
 
+            // R = CHECKPOINT
+
             if (
                 key === "r"
             ) {
@@ -313,6 +325,8 @@ function init() {
 
             }
 
+
+            // T = RESTART
 
             if (
                 key === "t"
@@ -337,6 +351,8 @@ function init() {
         }
     );
 
+
+    // RESIZE
 
     window.addEventListener(
         "resize",
@@ -463,7 +479,7 @@ function createTrack(
     );
 
 
-    // CENTER LINES
+    // ROAD CENTER LINES
 
     for (
         let z = 0;
@@ -522,7 +538,9 @@ function createTrack(
             if (
                 index === 0
             ) {
+
                 return;
+
             }
 
 
@@ -567,10 +585,15 @@ function createTrack(
 
 
             checkpoints.push({
+
                 mesh: checkpoint,
+
                 x: point.x,
+
                 z: point.z,
+
                 passed: false
+
             });
 
         }
@@ -690,11 +713,15 @@ function update() {
     if (
         !timerRunning
     ) {
+
         return;
+
     }
 
 
-    // ACCELERATE
+    // ======================================
+    // ACCELERATION
+    // ======================================
 
     if (
         keys["w"] ||
@@ -718,7 +745,9 @@ function update() {
     }
 
 
-    // BRAKE
+    // ======================================
+    // BRAKING
+    // ======================================
 
     else if (
         keys["s"] ||
@@ -740,7 +769,9 @@ function update() {
     }
 
 
+    // ======================================
     // FRICTION
+    // ======================================
 
     else {
 
@@ -759,27 +790,33 @@ function update() {
     }
 
 
+    // ======================================
     // STEERING
+    // ======================================
 
     let steering = 0;
 
+
+    // LEFT = LEFT
 
     if (
         keys["a"] ||
         keys["arrowleft"]
     ) {
 
-        steering = 1;
+        steering = -1;
 
     }
 
+
+    // RIGHT = RIGHT
 
     if (
         keys["d"] ||
         keys["arrowright"]
     ) {
 
-        steering = -1;
+        steering = 1;
 
     }
 
@@ -790,7 +827,9 @@ function update() {
         0.8;
 
 
+    // ======================================
     // KEEP CAR ON ROAD
+    // ======================================
 
     const roadWidth =
         tracks[
@@ -820,22 +859,31 @@ function update() {
     }
 
 
+    // ======================================
     // MOVE CAR
+    // ======================================
 
     car.position.z -=
         speed;
 
 
+    // ======================================
+    // CHECK CHECKPOINTS
+    // ======================================
+
     checkCheckpoints();
 
 
+    // ======================================
     // CAMERA
+    // ======================================
 
     camera.position.x =
         car.position.x;
 
 
-    camera.position.y = 5;
+    camera.position.y =
+        5;
 
 
     camera.position.z =
@@ -849,7 +897,9 @@ function update() {
     );
 
 
-    // SPEED
+    // ======================================
+    // SPEED DISPLAY
+    // ======================================
 
     document.getElementById(
         "speed"
@@ -860,7 +910,9 @@ function update() {
         );
 
 
+    // ======================================
     // TIMER
+    // ======================================
 
     const time =
         (
@@ -876,7 +928,9 @@ function update() {
         time.toFixed(2);
 
 
+    // ======================================
     // FINISH
+    // ======================================
 
     if (
         car.position.z <
@@ -913,7 +967,9 @@ function checkCheckpoints() {
         if (
             checkpoint.passed
         ) {
+
             continue;
+
         }
 
 
@@ -937,17 +993,25 @@ function checkCheckpoints() {
 
 
             lastCheckpoint = {
+
                 x: checkpoint.x,
+
                 y: 0.7,
+
                 z: checkpoint.z + 5
+
             };
 
 
             checkpoint.mesh.material =
                 new THREE.MeshStandardMaterial({
+
                     color: 0x00ff00,
+
                     transparent: true,
+
                     opacity: 0.4
+
                 });
 
         }
@@ -958,7 +1022,7 @@ function checkCheckpoints() {
 
 
 // ==========================================
-// RESPAWN
+// R = RESPAWN CHECKPOINT
 // ==========================================
 
 function respawnCheckpoint() {
@@ -966,14 +1030,20 @@ function respawnCheckpoint() {
     if (
         !timerRunning
     ) {
+
         return;
+
     }
 
 
     car.position.set(
+
         lastCheckpoint.x,
+
         lastCheckpoint.y,
+
         lastCheckpoint.z
+
     );
 
 
@@ -983,15 +1053,19 @@ function respawnCheckpoint() {
 
 
 // ==========================================
-// RESTART RUN
+// T = RESTART RUN
 // ==========================================
 
 function restartRun() {
 
     car.position.set(
+
         0,
+
         0.7,
+
         10
+
     );
 
 
@@ -1003,11 +1077,17 @@ function restartRun() {
 
 
     lastCheckpoint = {
+
         x: 0,
+
         y: 0.7,
+
         z: 10
+
     };
 
+
+    // RESET CHECKPOINTS
 
     for (
         let checkpoint of checkpoints
@@ -1019,13 +1099,19 @@ function restartRun() {
 
         checkpoint.mesh.material =
             new THREE.MeshStandardMaterial({
+
                 color: 0x00ffff,
+
                 transparent: true,
+
                 opacity: 0.35
+
             });
 
     }
 
+
+    // RESET TIMER
 
     startTime =
         performance.now();
@@ -1059,40 +1145,60 @@ function finishRace(
         getBestTime();
 
 
+    // NEW BEST
+
     if (
         best === 0 ||
         time < best
     ) {
 
         localStorage.setItem(
+
             "trackRacerBest_" +
             currentTrack,
+
             time
+
         );
 
 
         alert(
+
             "NEW BEST TIME!\n\n" +
+
             tracks[
                 currentTrack
             ].name +
+
             "\n" +
+
             time.toFixed(2) +
+
             " seconds"
+
         );
 
     }
 
+
+    // NORMAL FINISH
+
     else {
 
         alert(
+
             "FINISH!\n\n" +
+
             tracks[
                 currentTrack
             ].name +
+
             "\n" +
+
             time.toFixed(2) +
+
             " seconds"
+
         );
 
     }
@@ -1101,7 +1207,9 @@ function finishRace(
     document.getElementById(
         "best"
     ).innerText =
+
         "Best: " +
+
         getBestTime().toFixed(2);
 
 
@@ -1121,14 +1229,22 @@ function finishRace(
 function getBestTime() {
 
     const value =
+
         localStorage.getItem(
+
             "trackRacerBest_" +
+
             currentTrack
+
         );
 
 
-    if (!value) {
+    if (
+        !value
+    ) {
+
         return 0;
+
     }
 
 
@@ -1140,93 +1256,126 @@ function getBestTime() {
 
 
 // ==========================================
-// COIN REWARDS
+// COIN REWARD TIERS
 // ==========================================
 
 const trackCoinTiers = [
 
     // SPEED RUSH
+
     [
+
         {
             time: 35,
             coins: 10
         },
+
         {
             time: 28,
             coins: 20
         },
+
         {
             time: 23,
             coins: 40
         }
+
     ],
 
+
     // TECH CIRCUIT
+
     [
+
         {
             time: 38,
             coins: 10
         },
+
         {
             time: 30,
             coins: 25
         },
+
         {
             time: 25,
             coins: 45
         }
+
     ],
 
+
     // AIRBORNE
+
     [
+
         {
             time: 40,
             coins: 10
         },
+
         {
             time: 32,
             coins: 25
         },
+
         {
             time: 26,
             coins: 50
         }
+
     ],
 
+
     // LOOP RUNNER
+
     [
+
         {
             time: 43,
             coins: 15
         },
+
         {
             time: 34,
             coins: 30
         },
+
         {
             time: 28,
             coins: 55
         }
+
     ],
 
+
     // FINAL CHALLENGE
+
     [
+
         {
             time: 48,
             coins: 15
         },
+
         {
             time: 38,
             coins: 35
         },
+
         {
             time: 31,
             coins: 60
         }
+
     ]
 
 ];
 
+
+// ==========================================
+// GIVE TRACK RACER COINS
+// ==========================================
 
 function giveTrackRacerCoins(
     time
@@ -1240,6 +1389,8 @@ function giveTrackRacerCoins(
 
     let reward = 0;
 
+
+    // CHECK BEST TIER FIRST
 
     for (
         let i = tiers.length - 1;
@@ -1287,10 +1438,15 @@ function giveTrackRacerCoins(
 
 
         alert(
+
             "COINS EARNED!\n\n" +
+
             "+" +
+
             reward +
+
             " 🪙"
+
         );
 
     }
@@ -1426,7 +1582,7 @@ function createTrackMenu() {
 
 
 // ==========================================
-// UPDATE BUTTONS
+// UPDATE TRACK BUTTONS
 // ==========================================
 
 function updateButtons() {
@@ -1438,6 +1594,7 @@ function updateButtons() {
 
 
     buttons.forEach(
+
         function(
             button,
             index
@@ -1461,6 +1618,7 @@ function updateButtons() {
             }
 
         }
+
     );
 
 }
