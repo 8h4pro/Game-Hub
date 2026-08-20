@@ -1,129 +1,146 @@
-// ==========================================
-// GAME HUB ACCOUNT + LEADERBOARD
-// ==========================================
+<!DOCTYPE html>
+<html lang="en">
 
-function getGameHubUsername() {
-    return localStorage.getItem("gameHubUsername") || "Guest";
-}
+<head>
 
-function getLeaderboard() {
-    const data = localStorage.getItem("trackRacerLeaderboard");
+    <meta charset="UTF-8">
 
-    if (!data) {
-        return [];
-    }
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    try {
-        return JSON.parse(data);
-    } catch {
-        return [];
-    }
-}
+    <title>Game Hub</title>
 
-function saveLeaderboard(data) {
-    localStorage.setItem(
-        "trackRacerLeaderboard",
-        JSON.stringify(data)
-    );
-}
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
-function saveTrackRacerScore(time) {
-
-    const username = getGameHubUsername();
-
-    if (username === "Guest") {
-        alert(
-            "Please create an account on Game Hub before saving your score!"
-        );
-
-        return;
-    }
-
-    let leaderboard = getLeaderboard();
-
-    const existingPlayer = leaderboard.find(
-        player => player.username === username
-    );
-
-    if (existingPlayer) {
-
-        // Only replace the score if this is a better time
-        if (time < existingPlayer.time) {
-            existingPlayer.time = time;
-        }
-
-    } else {
-
-        leaderboard.push({
-            username: username,
-            time: time
-        });
-
-    }
-
-    // Fastest times first
-    leaderboard.sort(
-        (a, b) => a.time - b.time
-    );
-
-    // Keep top 10
-    leaderboard = leaderboard.slice(0, 10);
-
-    saveLeaderboard(leaderboard);
-
-    displayLeaderboard();
-}
-
-function displayLeaderboard() {
-
-    const leaderboard = getLeaderboard();
-
-    const leaderboardElement =
-        document.getElementById("leaderboard");
-
-    if (!leaderboardElement) {
-        return;
-    }
-
-    leaderboardElement.innerHTML = "";
-
-    if (leaderboard.length === 0) {
-
-        leaderboardElement.innerHTML =
-            "<p>No scores yet!</p>";
-
-        return;
-    }
-
-    leaderboard.forEach((player, index) => {
-
-        const row = document.createElement("div");
-
-        row.className = "leaderboard-row";
-
-        row.innerHTML = `
-            <span>#${index + 1}</span>
-            <span>${escapeHTML(player.username)}</span>
-            <span>${player.time.toFixed(2)}s</span>
-        `;
-
-        leaderboardElement.appendChild(row);
-
-    });
-}
-
-function escapeHTML(text) {
-
-    const div = document.createElement("div");
-
-    div.textContent = text;
-
-    return div.innerHTML;
-}
+</head>
 
 
-// Display leaderboard when game loads
-window.addEventListener(
-    "load",
-    displayLeaderboard
-);
+<body>
+
+    <header>
+
+        <h1>GAME HUB</h1>
+
+        <p>Your ultimate gaming hub</p>
+
+        <button onclick="showAccount()">
+            ACCOUNT
+        </button>
+
+        <div id="coinDisplay">
+            🪙 <span id="coinBalance">0</span>
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <h2>GAMES</h2>
+
+        <div class="games">
+
+            <div class="game-card">
+
+                <div class="game-icon">
+                    🏎️
+                </div>
+
+                <h3>
+                    Track Racer
+                </h3>
+
+                <p>
+                    Race around the track and beat your best time.
+                </p>
+
+                <button
+                    onclick="window.location.href='games/track-racer/index.html'"
+                >
+                    PLAY
+                </button>
+
+            </div>
+
+
+            <div class="game-card">
+
+                <div class="game-icon">
+                    🎮
+                </div>
+
+                <h3>
+                    Coming Soon
+                </h3>
+
+                <p>
+                    More games are coming to Game Hub.
+                </p>
+
+                <button disabled>
+                    SOON
+                </button>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <div id="accountWindow">
+
+        <div class="account-box">
+
+            <h2>
+                YOUR ACCOUNT
+            </h2>
+
+            <input
+                type="text"
+                id="username"
+                placeholder="Enter your username"
+                maxlength="20"
+            >
+
+            <p id="accountMessage">
+                Enter a username to create your account.
+            </p>
+
+            <button onclick="login()">
+                SAVE ACCOUNT
+            </button>
+
+            <button onclick="logout()">
+                LOG OUT
+            </button>
+
+            <button onclick="closeAccount()">
+                CLOSE
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <footer>
+
+        <p>
+            Game Hub © 2026
+        </p>
+
+    </footer>
+
+
+    <script src="account.js"></script>
+    <script src="coins.js"></script>
+
+</body>
+
+</html>
