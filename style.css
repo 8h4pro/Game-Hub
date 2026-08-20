@@ -30,6 +30,12 @@ header button {
     margin-top: 20px;
 }
 
+#coinDisplay {
+    margin-top: 15px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
 main {
     max-width: 1100px;
     margin: auto;
@@ -43,10 +49,8 @@ main h2 {
 
 .games {
     display: grid;
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(230px, 1fr)
-    );
+    grid-template-columns:
+        repeat(auto-fit, minmax(230px, 1fr));
     gap: 20px;
 }
 
@@ -56,7 +60,9 @@ main h2 {
     padding: 25px;
     text-align: center;
     border: 1px solid #333;
-    transition: transform 0.2s, border-color 0.2s;
+    transition:
+        transform 0.2s,
+        border-color 0.2s;
 }
 
 .game-card:hover {
@@ -94,6 +100,11 @@ button:hover {
     background: #ff5a50;
 }
 
+button:disabled {
+    background: #555;
+    cursor: not-allowed;
+}
+
 .game-card button {
     margin-top: 20px;
 }
@@ -108,6 +119,7 @@ button:hover {
     background: rgba(0, 0, 0, 0.8);
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
 .account-box {
@@ -139,47 +151,12 @@ button:hover {
     color: #aaa;
 }
 
+.account-box button {
+    margin: 5px;
+}
+
 footer {
     text-align: center;
     padding: 40px 20px;
     color: #666;
-}
-
-#leaderboardContainer {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 280px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 20px;
-    border-radius: 15px;
-    font-family: Arial, sans-serif;
-    z-index: 1000;
-}
-
-#leaderboardContainer h2 {
-    text-align: center;
-    margin-bottom: 15px;
-    font-size: 20px;
-}
-
-#leaderboard {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.leaderboard-row {
-    display: grid;
-    grid-template-columns: 40px 1fr 70px;
-    gap: 5px;
-    padding: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    font-size: 14px;
-}
-
-.leaderboard-row span:last-child {
-    text-align: right;
 }
