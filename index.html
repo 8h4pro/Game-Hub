@@ -10,136 +10,68 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Game Hub</title>
+    <title>Track Racer - Game Hub</title>
 
     <link
         rel="stylesheet"
         href="style.css"
     >
 
-</head>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
+</head>
 
 <body>
 
-    <header>
+    <div id="ui">
 
-        <h1>GAME HUB</h1>
+        <h1>TRACK RACER</h1>
 
-        <p>Your ultimate gaming hub</p>
+        <div id="trackName">
+            SPEED RUSH
+        </div>
 
-        <button onclick="showAccount()">
-            ACCOUNT
+        <div id="timer">
+            Time: 0.00
+        </div>
+
+        <div id="speed">
+            Speed: 0
+        </div>
+
+        <div id="best">
+            Best: 0.00
+        </div>
+
+        <div id="coins">
+            🪙 Coins: <span id="gameCoins">0</span>
+        </div>
+
+        <button onclick="restartRun()">
+            RESTART RUN
         </button>
 
-        <div id="coinDisplay">
-            🪙 <span id="coinBalance">0</span>
-        </div>
-
-    </header>
-
-
-    <main>
-
-        <h2>GAMES</h2>
-
-        <div class="games">
-
-            <div class="game-card">
-
-                <div class="game-icon">
-                    🏎️
-                </div>
-
-                <h3>
-                    Track Racer
-                </h3>
-
-                <p>
-                    Race around the track and beat your best time.
-                </p>
-
-                <button
-                    onclick="window.location.href='games/track-racer/index.html'"
-                >
-                    PLAY
-                </button>
-
-            </div>
-
-
-            <div class="game-card">
-
-                <div class="game-icon">
-                    🎮
-                </div>
-
-                <h3>
-                    Coming Soon
-                </h3>
-
-                <p>
-                    More games are coming to Game Hub.
-                </p>
-
-                <button disabled>
-                    SOON
-                </button>
-
-            </div>
-
-        </div>
-
-    </main>
-
-
-    <div id="accountWindow">
-
-        <div class="account-box">
-
-            <h2>
-                YOUR ACCOUNT
-            </h2>
-
-            <input
-                type="text"
-                id="username"
-                placeholder="Enter your username"
-                maxlength="20"
-            >
-
-            <p id="accountMessage">
-                Enter a username to create your account.
-            </p>
-
-            <button onclick="login()">
-                SAVE ACCOUNT
-            </button>
-
-            <button onclick="logout()">
-                LOG OUT
-            </button>
-
-            <button onclick="closeAccount()">
-                CLOSE
-            </button>
-
-        </div>
+        <button
+            onclick="window.location.href='../../index.html'"
+        >
+            GAME HUB
+        </button>
 
     </div>
 
 
-    <footer>
+    <div id="leaderboardContainer">
 
-        <p>
-            Game Hub © 2026
-        </p>
+        <h2>🏆 LEADERBOARD</h2>
 
-    </footer>
+        <div id="leaderboard"></div>
+
+    </div>
 
 
-    <script src="account.js"></script>
-    <script src="coins.js"></script>
+    <script src="../../coins.js"></script>
+
+    <script src="game.js"></script>
 
 </body>
 
