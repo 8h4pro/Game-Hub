@@ -1,14 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Track Racer - Game Hub</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
 </head>
 
 <body>
@@ -17,46 +27,52 @@
 
         <h1>TRACK RACER</h1>
 
-        <div id="trackName">SPEED RUSH</div>
+        <div id="trackName">
+            SPEED RUSH
+        </div>
 
-        <div id="timer">Time: 0.00</div>
+        <div id="timer">
+            Time: 0.00
+        </div>
 
-        <div id="speed">Speed: 0</div>
+        <div id="speed">
+            Speed: 0
+        </div>
 
-        <div id="best">Best: 0.00</div>
+        <div id="best">
+            Best: 0.00
+        </div>
 
-        <button onclick="restartRun()">RESTART RUN</button>
+        <div id="coins">
+            🪙 Coins: <span id="gameCoins">0</span>
+        </div>
 
-        <button onclick="window.location.href='../../index.html'">
+        <button onclick="restartRun()">
+            RESTART RUN
+        </button>
+
+        <button
+            onclick="window.location.href='../../index.html'"
+        >
             GAME HUB
         </button>
 
     </div>
 
 
-    <div id="controls">
+    <div id="leaderboardContainer">
 
-        <p>W / ↑ = Accelerate</p>
-        <p>S / ↓ = Brake</p>
-        <p>A / ← = Left</p>
-        <p>D / → = Right</p>
+        <h2>🏆 LEADERBOARD</h2>
 
-        <p>R = Last Checkpoint</p>
-        <p>T = Restart Run</p>
-
-        <p>1-5 = Select Track</p>
+        <div id="leaderboard"></div>
 
     </div>
 
-    <div id="leaderboardContainer">
 
-    <h2>🏆 LEADERBOARD</h2>
+    <script src="../../coins.js"></script>
 
-    <div id="leaderboard"></div>
+    <script src="game.js"></script>
 
-</div>
-
-<script src="../../coins.js"></script>
-<script src="game.js"></script>
 </body>
+
 </html>
