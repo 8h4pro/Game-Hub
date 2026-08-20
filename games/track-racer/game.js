@@ -681,6 +681,11 @@ function selectTrack(
 
     updateButtons();
 
+
+    // UPDATE LEADERBOARD
+
+    displayLeaderboard();
+
 }
 
 
@@ -1105,6 +1110,13 @@ function finishRace(
         "Best: " +
         getBestTime().toFixed(2);
 
+
+    // SAVE SCORE TO GAME HUB LEADERBOARD
+
+    saveTrackRacerScore(
+        time
+    );
+
 }
 
 
@@ -1293,6 +1305,355 @@ function updateButtons() {
     );
 
 }
+
+
+// ==========================================
+// GAME HUB ACCOUNT + LEADERBOARD
+// ==========================================
+
+function getGameHubUsername() {
+
+    return (
+        localStorage.getItem(
+            "gameHubUsername"
+        ) ||
+        "Guest"
+    );
+
+}
+
+
+function getLeaderboard() {
+
+    const data =
+        localStorage.getItem(
+            "trackRacerLeaderboard"
+        );
+
+
+    if (!data) {
+
+        return [];
+
+    }
+
+
+    try {
+
+        return JSON.parse(
+            data
+        );
+
+    }
+
+    catch {
+
+        return [];
+
+    }
+
+}
+
+
+function saveLeaderboard(
+    data
+) {
+
+    localStorage.setItem(
+        "trackRacerLeaderboard",
+        JSON.stringify(data)
+    );
+
+}
+
+
+// SAVE TRACK RACER SCORE
+
+function saveTrackRacerScore(
+    time
+) {
+
+    const username =
+        getGameHubUsername();
+
+
+    if (
+        username === "Guest"
+    ) {
+
+        alert(
+            "Please create an account on Game Hub before saving your score!"
+        );
+
+        return;
+
+    }
+
+
+    let leaderboard =
+        getLeaderboard();
+
+
+    const existingPlayer =
+        leaderboard.find(
+            function(player) {
+
+                return (
+                    player.username ===
+                    username &&
+                    player.track ===
+                    currentTrack
+                );
+
+            }
+        );
+
+
+    if (
+        existingPlayer
+    ) {
+
+        // ONLY SAVE IF IT IS A BETTER TIME
+
+        if (
+            time <
+            existingPlayer.time
+        ) {
+
+            existingPlayer.time =
+                time;
+
+        }
+
+    }
+
+    else {
+
+        leaderboard.push({
+
+            username:
+                username,
+
+            time:
+                time,
+
+            track:
+                currentTrack
+
+        });
+
+    }
+
+
+    // ONLY SHOW CURRENT TRACK
+
+    const currentTrackScores =
+        leaderboard.filter(
+            function(player) {
+
+                return (
+                    player.track ===
+                    currentTrack
+                );
+
+            }
+        );
+
+
+    // FASTEST TIMES FIRST
+
+    currentTrackScores.sort(
+        function(a, b) {
+
+            return (
+                a.time -
+                b.time
+            );
+
+        }
+    );
+
+
+    // KEEP TOP 10
+
+    const topScores =
+        currentTrackScores.slice(
+            0,
+            10
+        );
+
+
+    // Remove old scores for this track
+
+    leaderboard =
+        leaderboard.filter(
+            function(player) {
+
+                return (
+                    player.track !==
+                    currentTrack
+                );
+
+            }
+        );
+
+
+    // Add updated scores
+
+    leaderboard =
+        leaderboard.concat(
+            topScores
+        );
+
+
+    saveLeaderboard(
+        leaderboard
+    );
+
+
+    displayLeaderboard();
+
+}
+
+
+// DISPLAY LEADERBOARD
+
+function displayLeaderboard() {
+
+    const leaderboardElement =
+        document.getElementById(
+            "leaderboard"
+        );
+
+
+    if (
+        !leaderboardElement
+    ) {
+
+        return;
+
+    }
+
+
+    const leaderboard =
+        getLeaderboard();
+
+
+    const currentTrackScores =
+        leaderboard
+            .filter(
+                function(player) {
+
+                    return (
+                        player.track ===
+                        currentTrack
+                    );
+
+                }
+            )
+            .sort(
+                function(a, b) {
+
+                    return (
+                        a.time -
+                        b.time
+                    );
+
+                }
+            );
+
+
+    leaderboardElement.innerHTML =
+        "";
+
+
+    if (
+        currentTrackScores.length ===
+        0
+    ) {
+
+        leaderboardElement.innerHTML =
+            "<p>No scores yet!</p>";
+
+        return;
+
+    }
+
+
+    currentTrackScores.forEach(
+        function(
+            player,
+            index
+        ) {
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "leaderboard-row";
+
+
+            row.innerHTML =
+
+                "<span>#" +
+                (index + 1) +
+                "</span>" +
+
+                "<span>" +
+                escapeHTML(
+                    player.username
+                ) +
+                "</span>" +
+
+                "<span>" +
+                player.time.toFixed(2) +
+                "s</span>";
+
+
+            leaderboardElement.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
+
+
+// PROTECT LEADERBOARD FROM HTML INJECTION
+
+function escapeHTML(
+    text
+) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        text;
+
+
+    return div.innerHTML;
+
+}
+
+
+// DISPLAY LEADERBOARD WHEN GAME LOADS
+
+window.addEventListener(
+    "load",
+    function() {
+
+        displayLeaderboard();
+
+    }
+);
 
 
 // GAME LOOP
