@@ -804,7 +804,7 @@ function update() {
         keys["arrowleft"]
     ) {
 
-        steering = -1;
+        steering = 1;
 
     }
 
@@ -816,12 +816,17 @@ function update() {
         keys["arrowright"]
     ) {
 
-        steering = 1;
+        steering = -1;
 
     }
 
 
-    car.position.x +=
+    // IMPORTANT:
+    // SUBTRACTING HERE MAKES
+    // A / LEFT MOVE THE CAR LEFT
+    // AND D / RIGHT MOVE THE CAR RIGHT.
+
+    car.position.x -=
         steering *
         speed *
         0.8;
@@ -1155,6 +1160,7 @@ function finishRace(
         localStorage.setItem(
 
             "trackRacerBest_" +
+
             currentTrack,
 
             time
