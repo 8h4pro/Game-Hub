@@ -1,33 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Track Racer</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="style.css">
+    <title>Game Hub</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
-    <div id="ui">
-        <h1>TRACK RACER</h1>
-        <div id="timer">Time: 0.00</div>
-        <div id="speed">Speed: 0</div>
-        <button onclick="restartGame()">RESTART</button>
+    <header>
+
+        <h1>GAME HUB</h1>
+
+        <p>Your ultimate gaming practice hub</p>
+
+        <button onclick="showAccount()">
+            ACCOUNT
+        </button>
+
+    </header>
+
+
+    <main>
+
+        <h2>GAMES</h2>
+
+
+        <div class="games">
+
+
+            <!-- TRACK RACER -->
+
+            <div class="game-card">
+
+                <div class="game-icon">
+                    🏎️
+                </div>
+
+                <h3>Track Racer</h3>
+
+                <p>
+                    Race through challenging
+                    tracks and beat your best time.
+                </p>
+
+                <button
+                    onclick="window.location.href='games/track-racer/index.html'"
+                >
+                    PLAY
+                </button>
+
+            </div>
+
+
+            <!-- AIM TRAINER -->
+
+            <div class="game-card locked">
+
+                <div class="game-icon">
+                    🎯
+                </div>
+
+                <h3>Aim Trainer</h3>
+
+                <p>
+                    Improve your aim and accuracy.
+                </p>
+
+                <button disabled>
+                    COMING SOON
+                </button>
+
+            </div>
+
+
+            <!-- REACTION TEST -->
+
+            <div class="game-card locked">
+
+                <div class="game-icon">
+                    ⚡
+                </div>
+
+                <h3>Reaction Test</h3>
+
+                <p>
+                    Test how fast you can react.
+                </p>
+
+                <button disabled>
+                    COMING SOON
+                </button>
+
+            </div>
+
+
+            <!-- CPS TEST -->
+
+            <div class="game-card locked">
+
+                <div class="game-icon">
+                    🖱️
+                </div>
+
+                <h3>CPS Test</h3>
+
+                <p>
+                    Test your clicks per second.
+                </p>
+
+                <button disabled>
+                    COMING SOON
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- ACCOUNT WINDOW -->
+
+    <div
+        id="accountWindow"
+        class="account-window"
+    >
+
+        <div class="account-box">
+
+            <button
+                class="close"
+                onclick="closeAccount()"
+            >
+                ×
+            </button>
+
+            <h2>ACCOUNT</h2>
+
+            <input
+                id="username"
+                type="text"
+                placeholder="Username"
+                maxlength="20"
+            >
+
+            <button onclick="login()">
+                SAVE ACCOUNT
+            </button>
+
+            <p id="accountMessage"></p>
+
+        </div>
+
     </div>
 
-    <div id="controls">
-        <p>W / ↑ = Accelerate</p>
-        <p>S / ↓ = Brake</p>
-        <p>A / ← = Left</p>
-        <p>D / → = Right</p>
-    </div>
 
-    <script src="game.js"></script>
+    <script src="account.js"></script>
 
 </body>
+
 </html>
