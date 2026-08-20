@@ -3,25 +3,37 @@
 // ==========================================
 
 function getCoins() {
+
     return Number(
-        localStorage.getItem("gameHubCoins") || 0
+        localStorage.getItem(
+            "gameHubCoins"
+        ) || 0
     );
+
 }
 
 
-function saveCoins(amount) {
+function saveCoins(
+    amount
+) {
+
     localStorage.setItem(
         "gameHubCoins",
         amount
     );
 
     updateCoinDisplay();
+
 }
 
 
-function addCoins(amount) {
+function addCoins(
+    amount
+) {
 
-    if (amount <= 0) {
+    if (
+        amount <= 0
+    ) {
         return;
     }
 
@@ -31,12 +43,17 @@ function addCoins(amount) {
     saveCoins(
         currentCoins + amount
     );
+
 }
 
 
-function removeCoins(amount) {
+function removeCoins(
+    amount
+) {
 
-    if (amount <= 0) {
+    if (
+        amount <= 0
+    ) {
         return;
     }
 
@@ -52,6 +69,7 @@ function removeCoins(amount) {
     saveCoins(
         newAmount
     );
+
 }
 
 
@@ -62,12 +80,15 @@ function updateCoinDisplay() {
             "coinBalance"
         );
 
-    if (!coinElement) {
+    if (
+        !coinElement
+    ) {
         return;
     }
 
     coinElement.innerText =
         getCoins();
+
 }
 
 
