@@ -29,6 +29,10 @@ let lastCheckpoint = {
 let currentCheckpoint = 0;
 
 
+// ==========================================
+// TRACKS
+// ==========================================
+
 const tracks = [
 
     {
@@ -46,7 +50,6 @@ const tracks = [
             { z: -420, x: 0 }
         ]
     },
-
 
     {
         name: "TECH CIRCUIT",
@@ -66,7 +69,6 @@ const tracks = [
         ]
     },
 
-
     {
         name: "AIRBORNE",
         length: 500,
@@ -83,7 +85,6 @@ const tracks = [
         ]
     },
 
-
     {
         name: "LOOP RUNNER",
         length: 550,
@@ -99,7 +100,6 @@ const tracks = [
             { z: -500, x: 0 }
         ]
     },
-
 
     {
         name: "FINAL CHALLENGE",
@@ -122,14 +122,18 @@ const tracks = [
 ];
 
 
+// ==========================================
 // START
+// ==========================================
 
 init();
 
 animate();
 
 
+// ==========================================
 // CREATE GAME
+// ==========================================
 
 function init() {
 
@@ -138,8 +142,6 @@ function init() {
     scene.background =
         new THREE.Color(0x87ceeb);
 
-
-    // CAMERA
 
     camera =
         new THREE.PerspectiveCamera(
@@ -158,8 +160,6 @@ function init() {
     );
 
 
-    // GRAPHICS
-
     renderer =
         new THREE.WebGLRenderer({
             antialias: true
@@ -176,8 +176,6 @@ function init() {
         renderer.domElement
     );
 
-
-    // LIGHT
 
     const sunlight =
         new THREE.DirectionalLight(
@@ -277,8 +275,6 @@ function init() {
     );
 
 
-    // FIRST TRACK
-
     createTrack(
         currentTrack
     );
@@ -297,8 +293,6 @@ function init() {
             keys[key] = true;
 
 
-            // TRACK SELECT
-
             if (
                 event.key >= "1" &&
                 event.key <= "5"
@@ -311,18 +305,18 @@ function init() {
             }
 
 
-            // R = CHECKPOINT
-
-            if (key === "r") {
+            if (
+                key === "r"
+            ) {
 
                 respawnCheckpoint();
 
             }
 
 
-            // T = RESTART RUN
-
-            if (key === "t") {
+            if (
+                key === "t"
+            ) {
 
                 restartRun();
 
@@ -343,8 +337,6 @@ function init() {
         }
     );
 
-
-    // RESIZE
 
     window.addEventListener(
         "resize",
@@ -369,13 +361,14 @@ function init() {
 
     createTrackMenu();
 
-
     selectTrack(0);
 
 }
 
 
+// ==========================================
 // CREATE TRACK
+// ==========================================
 
 function createTrack(
     trackNumber
@@ -383,9 +376,7 @@ function createTrack(
 
     removeTrack();
 
-
     checkpoints = [];
-
 
     const track =
         tracks[trackNumber];
@@ -472,7 +463,7 @@ function createTrack(
     );
 
 
-    // ROAD CENTER LINES
+    // CENTER LINES
 
     for (
         let z = 0;
@@ -528,7 +519,9 @@ function createTrack(
             index
         ) {
 
-            if (index === 0) {
+            if (
+                index === 0
+            ) {
                 return;
             }
 
@@ -626,7 +619,9 @@ function createTrack(
 }
 
 
+// ==========================================
 // REMOVE TRACK
+// ==========================================
 
 function removeTrack() {
 
@@ -646,7 +641,9 @@ function removeTrack() {
 }
 
 
+// ==========================================
 // SELECT TRACK
+// ==========================================
 
 function selectTrack(
     number
@@ -681,15 +678,12 @@ function selectTrack(
 
     updateButtons();
 
-
-    // UPDATE LEADERBOARD
-
-    displayLeaderboard();
-
 }
 
 
+// ==========================================
 // UPDATE GAME
+// ==========================================
 
 function update() {
 
@@ -832,8 +826,6 @@ function update() {
         speed;
 
 
-    // CHECK CHECKPOINTS
-
     checkCheckpoints();
 
 
@@ -902,7 +894,9 @@ function update() {
 }
 
 
+// ==========================================
 // CHECK CHECKPOINTS
+// ==========================================
 
 function checkCheckpoints() {
 
@@ -949,8 +943,6 @@ function checkCheckpoints() {
             };
 
 
-            // CHANGE CHECKPOINT COLOR
-
             checkpoint.mesh.material =
                 new THREE.MeshStandardMaterial({
                     color: 0x00ff00,
@@ -965,7 +957,9 @@ function checkCheckpoints() {
 }
 
 
-// R = RESPAWN AT CHECKPOINT
+// ==========================================
+// RESPAWN
+// ==========================================
 
 function respawnCheckpoint() {
 
@@ -988,7 +982,9 @@ function respawnCheckpoint() {
 }
 
 
-// T = RESTART RUN
+// ==========================================
+// RESTART RUN
+// ==========================================
 
 function restartRun() {
 
@@ -1013,8 +1009,6 @@ function restartRun() {
     };
 
 
-    // RESET CHECKPOINTS
-
     for (
         let checkpoint of checkpoints
     ) {
@@ -1033,8 +1027,6 @@ function restartRun() {
     }
 
 
-    // RESET TIMER
-
     startTime =
         performance.now();
 
@@ -1051,7 +1043,9 @@ function restartRun() {
 }
 
 
+// ==========================================
 // FINISH RACE
+// ==========================================
 
 function finishRace(
     time
@@ -1111,16 +1105,18 @@ function finishRace(
         getBestTime().toFixed(2);
 
 
-    // SAVE SCORE TO GAME HUB LEADERBOARD
+    // GIVE COINS
 
-    saveTrackRacerScore(
+    giveTrackRacerCoins(
         time
     );
 
 }
 
 
+// ==========================================
 // GET BEST TIME
+// ==========================================
 
 function getBestTime() {
 
@@ -1143,7 +1139,168 @@ function getBestTime() {
 }
 
 
+// ==========================================
+// COIN REWARDS
+// ==========================================
+
+const trackCoinTiers = [
+
+    // SPEED RUSH
+    [
+        {
+            time: 35,
+            coins: 10
+        },
+        {
+            time: 28,
+            coins: 20
+        },
+        {
+            time: 23,
+            coins: 40
+        }
+    ],
+
+    // TECH CIRCUIT
+    [
+        {
+            time: 38,
+            coins: 10
+        },
+        {
+            time: 30,
+            coins: 25
+        },
+        {
+            time: 25,
+            coins: 45
+        }
+    ],
+
+    // AIRBORNE
+    [
+        {
+            time: 40,
+            coins: 10
+        },
+        {
+            time: 32,
+            coins: 25
+        },
+        {
+            time: 26,
+            coins: 50
+        }
+    ],
+
+    // LOOP RUNNER
+    [
+        {
+            time: 43,
+            coins: 15
+        },
+        {
+            time: 34,
+            coins: 30
+        },
+        {
+            time: 28,
+            coins: 55
+        }
+    ],
+
+    // FINAL CHALLENGE
+    [
+        {
+            time: 48,
+            coins: 15
+        },
+        {
+            time: 38,
+            coins: 35
+        },
+        {
+            time: 31,
+            coins: 60
+        }
+    ]
+
+];
+
+
+function giveTrackRacerCoins(
+    time
+) {
+
+    const tiers =
+        trackCoinTiers[
+            currentTrack
+        ];
+
+
+    let reward = 0;
+
+
+    for (
+        let i = tiers.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        if (
+            time <= tiers[i].time
+        ) {
+
+            reward =
+                tiers[i].coins;
+
+            break;
+
+        }
+
+    }
+
+
+    if (
+        reward > 0
+    ) {
+
+        addCoins(
+            reward
+        );
+
+
+        const gameCoins =
+            document.getElementById(
+                "gameCoins"
+            );
+
+
+        if (
+            gameCoins
+        ) {
+
+            gameCoins.innerText =
+                getCoins();
+
+        }
+
+
+        alert(
+            "COINS EARNED!\n\n" +
+            "+" +
+            reward +
+            " 🪙"
+        );
+
+    }
+
+}
+
+
+// ==========================================
 // CREATE TRACK MENU
+// ==========================================
 
 function createTrackMenu() {
 
@@ -1166,7 +1323,7 @@ function createTrackMenu() {
 
 
     menu.style.right =
-        "20px";
+        "320px";
 
 
     menu.style.zIndex =
@@ -1268,7 +1425,9 @@ function createTrackMenu() {
 }
 
 
+// ==========================================
 // UPDATE BUTTONS
+// ==========================================
 
 function updateButtons() {
 
@@ -1308,355 +1467,8 @@ function updateButtons() {
 
 
 // ==========================================
-// GAME HUB ACCOUNT + LEADERBOARD
-// ==========================================
-
-function getGameHubUsername() {
-
-    return (
-        localStorage.getItem(
-            "gameHubUsername"
-        ) ||
-        "Guest"
-    );
-
-}
-
-
-function getLeaderboard() {
-
-    const data =
-        localStorage.getItem(
-            "trackRacerLeaderboard"
-        );
-
-
-    if (!data) {
-
-        return [];
-
-    }
-
-
-    try {
-
-        return JSON.parse(
-            data
-        );
-
-    }
-
-    catch {
-
-        return [];
-
-    }
-
-}
-
-
-function saveLeaderboard(
-    data
-) {
-
-    localStorage.setItem(
-        "trackRacerLeaderboard",
-        JSON.stringify(data)
-    );
-
-}
-
-
-// SAVE TRACK RACER SCORE
-
-function saveTrackRacerScore(
-    time
-) {
-
-    const username =
-        getGameHubUsername();
-
-
-    if (
-        username === "Guest"
-    ) {
-
-        alert(
-            "Please create an account on Game Hub before saving your score!"
-        );
-
-        return;
-
-    }
-
-
-    let leaderboard =
-        getLeaderboard();
-
-
-    const existingPlayer =
-        leaderboard.find(
-            function(player) {
-
-                return (
-                    player.username ===
-                    username &&
-                    player.track ===
-                    currentTrack
-                );
-
-            }
-        );
-
-
-    if (
-        existingPlayer
-    ) {
-
-        // ONLY SAVE IF IT IS A BETTER TIME
-
-        if (
-            time <
-            existingPlayer.time
-        ) {
-
-            existingPlayer.time =
-                time;
-
-        }
-
-    }
-
-    else {
-
-        leaderboard.push({
-
-            username:
-                username,
-
-            time:
-                time,
-
-            track:
-                currentTrack
-
-        });
-
-    }
-
-
-    // ONLY SHOW CURRENT TRACK
-
-    const currentTrackScores =
-        leaderboard.filter(
-            function(player) {
-
-                return (
-                    player.track ===
-                    currentTrack
-                );
-
-            }
-        );
-
-
-    // FASTEST TIMES FIRST
-
-    currentTrackScores.sort(
-        function(a, b) {
-
-            return (
-                a.time -
-                b.time
-            );
-
-        }
-    );
-
-
-    // KEEP TOP 10
-
-    const topScores =
-        currentTrackScores.slice(
-            0,
-            10
-        );
-
-
-    // Remove old scores for this track
-
-    leaderboard =
-        leaderboard.filter(
-            function(player) {
-
-                return (
-                    player.track !==
-                    currentTrack
-                );
-
-            }
-        );
-
-
-    // Add updated scores
-
-    leaderboard =
-        leaderboard.concat(
-            topScores
-        );
-
-
-    saveLeaderboard(
-        leaderboard
-    );
-
-
-    displayLeaderboard();
-
-}
-
-
-// DISPLAY LEADERBOARD
-
-function displayLeaderboard() {
-
-    const leaderboardElement =
-        document.getElementById(
-            "leaderboard"
-        );
-
-
-    if (
-        !leaderboardElement
-    ) {
-
-        return;
-
-    }
-
-
-    const leaderboard =
-        getLeaderboard();
-
-
-    const currentTrackScores =
-        leaderboard
-            .filter(
-                function(player) {
-
-                    return (
-                        player.track ===
-                        currentTrack
-                    );
-
-                }
-            )
-            .sort(
-                function(a, b) {
-
-                    return (
-                        a.time -
-                        b.time
-                    );
-
-                }
-            );
-
-
-    leaderboardElement.innerHTML =
-        "";
-
-
-    if (
-        currentTrackScores.length ===
-        0
-    ) {
-
-        leaderboardElement.innerHTML =
-            "<p>No scores yet!</p>";
-
-        return;
-
-    }
-
-
-    currentTrackScores.forEach(
-        function(
-            player,
-            index
-        ) {
-
-            const row =
-                document.createElement(
-                    "div"
-                );
-
-
-            row.className =
-                "leaderboard-row";
-
-
-            row.innerHTML =
-
-                "<span>#" +
-                (index + 1) +
-                "</span>" +
-
-                "<span>" +
-                escapeHTML(
-                    player.username
-                ) +
-                "</span>" +
-
-                "<span>" +
-                player.time.toFixed(2) +
-                "s</span>";
-
-
-            leaderboardElement.appendChild(
-                row
-            );
-
-        }
-    );
-
-}
-
-
-// PROTECT LEADERBOARD FROM HTML INJECTION
-
-function escapeHTML(
-    text
-) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.textContent =
-        text;
-
-
-    return div.innerHTML;
-
-}
-
-
-// DISPLAY LEADERBOARD WHEN GAME LOADS
-
-window.addEventListener(
-    "load",
-    function() {
-
-        displayLeaderboard();
-
-    }
-);
-
-
 // GAME LOOP
+// ==========================================
 
 function animate() {
 
